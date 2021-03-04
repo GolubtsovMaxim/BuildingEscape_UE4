@@ -16,8 +16,11 @@ UWorldPosition::UWorldPosition()
 void UWorldPosition::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("World Position Component has been initialized for object %s, of class %s"), *this->GetOwner()->GetName(),  *this->GetOwner()->GetClass()->GetName());
+	const FString ObjectPos = GetOwner()->GetActorLocation().ToString();
+	UE_LOG
+		(LogTemp, Warning, TEXT("World Position Component has been initialized for object %s, of class %s, is at position %s"), 
+		*this->GetOwner()->GetName(),  *this->GetOwner()->GetClass()->GetName(),
+		*ObjectPos);	
 }
 
 
