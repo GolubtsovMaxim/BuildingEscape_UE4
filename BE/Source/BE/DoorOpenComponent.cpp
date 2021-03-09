@@ -6,8 +6,6 @@ UDoorOpenComponent::UDoorOpenComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -16,11 +14,8 @@ void UDoorOpenComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float RotationAngle = 90.f;
-	FRotator CurrentRotation = GetOwner()->GetActorRotation();
-
-	FRotator NewRotation = FRotator{ CurrentRotation.Pitch, CurrentRotation.Yaw + RotationAngle, CurrentRotation .Roll};
-	GetOwner()->SetActorRotation(NewRotation);
+	InitialYaw = GetOwner()->GetActorRotation().Yaw;
+	TargetYaw = InitialYaw + DeltaYaw;	
 }
 
 
@@ -29,6 +24,12 @@ void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	FRotator CurrentRotation = GetOwner()->GetActorRotation();
+	CurrentRotation.Yaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 40);
+	
+	GetOwner()->SetActorRotation(CurrentRotation);
+
+	UE_LOG(LogTemp, Warning, TEXT("Current Yaw is %f"), CurrentRotation.Yaw);
 	// ...
 }
 
