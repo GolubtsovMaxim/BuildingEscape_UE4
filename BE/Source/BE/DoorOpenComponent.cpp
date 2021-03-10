@@ -25,8 +25,9 @@ void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
-	CurrentRotation.Yaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 40);
-	
+	//CurrentRotation.Yaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 40);
+	CurrentRotation.Yaw = FMath::Lerp(CurrentRotation.Yaw, TargetYaw, DeltaTime * 1.f);
+
 	GetOwner()->SetActorRotation(CurrentRotation);
 
 	UE_LOG(LogTemp, Warning, TEXT("Current Yaw is %f"), CurrentRotation.Yaw);
