@@ -1,4 +1,6 @@
 #include "DoorOpenComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
 UDoorOpenComponent::UDoorOpenComponent()
@@ -21,19 +23,29 @@ void UDoorOpenComponent::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s has the DoorOpenComponent, but no PressurePlate set"), *GetOwner()->GetName())
 	}
+
+	IncomingActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 void UDoorOpenComponent::OpenDoor(float DeltaTime)
 {
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
 	//CurrentRotation.Yaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 40);
-	CurrentRotation.Yaw = FMath::Lerp(CurrentRotation.Yaw, TargetYaw, DeltaTime * 1.f);
+	CurrentRotation.Yaw = FMath::Lerp(CurrentRotation.Yaw, TargetYaw, DeltaTime * DoorOpenSpeed);
+
+	GetOwner()->SetActorRotation(CurrentRotation);
+}
+
+void UDoorOpenComponent::CloseDoor(float DeltaTime)
+{
+	FRotator CurrentRotation = GetOwner()->GetActorRotation();
+	//CurrentRotation.Yaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, 40);
+	CurrentRotation.Yaw = FMath::Lerp(CurrentRotation.Yaw, InitialYaw, DeltaTime * DoorCloseSpeed);
 
 	GetOwner()->SetActorRotation(CurrentRotation);
 }
 
 
-// Called every frame
 void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -41,8 +53,14 @@ void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	if (PressurePlate && IncomingActor && PressurePlate->IsOverlappingActor(IncomingActor))
 	{
 		OpenDoor(DeltaTime);
+		DoorLastOpened = GetWorld()->GetTimeSeconds();
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Current Yaw is %f"), CurrentRotation.Yaw);
-	// ...
+	else
+	{
+		if (GetWorld()->GetTimeSeconds() - DoorLastOpened > DoorCloseDelay)
+		{
+			CloseDoor(DeltaTime);
+		}
+	}
 }
 
