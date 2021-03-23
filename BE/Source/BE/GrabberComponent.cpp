@@ -18,12 +18,35 @@ void UGrabberComponent::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Grabber Component has been initialized for object %s, of class %s"),
 		   *this->GetOwner()->GetName(), *this->GetOwner()->GetClass()->GetName());
 
-	PhysicsHandleComp = GetOwner()->FindComponentByClass <UPhysicsHandleComponent>();
+	PhysicsHandleComp = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!PhysicsHandleComp)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s doesn't have a PhysicsHandleComp or it's null"), *GetOwner()->GetName());
 	}
+
+	InputComp = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (!InputComp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s doesn't have an InputComponent or it's null"), *GetOwner()->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent for %s found"), *GetOwner()->GetName());
+		InputComp->BindAction("Grab", EInputEvent::IE_Pressed, this, &UGrabberComponent::GrabPressed);
+		InputComp->BindAction("Grab", EInputEvent::IE_Released, this, &UGrabberComponent::GrabReleased);
+	}
 }
+
+void UGrabberComponent::GrabPressed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab is pressed"));
+}
+
+void UGrabberComponent::GrabReleased()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab is released"));
+}
+
 
 
 // Called every frame

@@ -30,6 +30,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	float Reach;
 
-	UPhysicsHandleComponent* PhysicsHandleComp = nullptr;
+	UPhysicsHandleComponent* PhysicsHandleComp { nullptr };
+	UInputComponent* InputComp{ nullptr };
+
+	void GrabPressed();
+
+	void GrabReleased();
 		
 };
