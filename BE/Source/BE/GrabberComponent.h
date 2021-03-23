@@ -28,13 +28,14 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere)
-	float Reach;
+	float Reach = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandleComp { nullptr };
 	UInputComponent* InputComp{ nullptr };
 
 	void GrabPressed();
-
 	void GrabReleased();
-		
+	void FindPhysicsHandle();
+	void SetupInputComponent();
+	FHitResult GetFirstPhysicsBodyInReach() const;
 };
