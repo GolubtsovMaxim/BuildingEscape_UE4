@@ -24,7 +24,6 @@ void UDoorOpenComponent::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("%s has the DoorOpenComponent, but no PressurePlate set"), *GetOwner()->GetName())
 	}
 
-	IncomingActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 void UDoorOpenComponent::OpenDoor(float DeltaTime)
@@ -50,7 +49,7 @@ void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate && IncomingActor && PressurePlate->IsOverlappingActor(IncomingActor))
+	if (TotalMass() > OpenMassTreshold)
 	{
 		OpenDoor(DeltaTime);
 		DoorLastOpened = GetWorld()->GetTimeSeconds();
@@ -64,3 +63,19 @@ void UDoorOpenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	}
 }
 
+float UDoorOpenComponent::TotalMass() const
+{						  
+	float TotalMass = 0;
+
+	TArray<AActor*> OverlappingActors;
+	
+	PressurePlate->GetOverlappingActors(OverlappingActors);
+
+	for (const auto& OverlappingActor: OverlappingActors)
+	{
+		auto res = OverlappingActor->FindComponentByClass<UStaticMeshComponent>();
+		TotalMass += res->GetMass();
+	}
+	
+	return TotalMass;
+}

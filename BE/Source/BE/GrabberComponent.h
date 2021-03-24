@@ -38,4 +38,6 @@ private:
 	void FindPhysicsHandle();
 	void SetupInputComponent();
 	FHitResult GetFirstPhysicsBodyInReach() const;
+	FVector GetLineTraceEnd() const;
+	FVector GetPlayersWorldPosition() const;
 };

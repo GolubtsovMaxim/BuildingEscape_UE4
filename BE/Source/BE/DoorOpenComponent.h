@@ -25,6 +25,8 @@ protected:
 
 	virtual void CloseDoor(float DeltaTime);
 
+	float TotalMass() const;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -37,10 +39,13 @@ private:
 	float DoorLastOpened = 0.f;
 
 	UPROPERTY(EditAnywhere)
-	AActor* IncomingActor;
+	float OpenMassTreshold;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	AActor* IncomingActor {nullptr};
+
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* PressurePlate {nullptr};
 
 	UPROPERTY(EditAnywhere)
 	float DeltaYaw;
