@@ -35,11 +35,7 @@ void UDoorOpenComponent::OpenDoor(float DeltaTime)
 
 	GetOwner()->SetActorRotation(CurrentRotation);
 
-	if (!bDoorIsOpened)
-	{
-		AudioComp->Play();
-		bDoorIsOpened = true;
-	}
+	AudioComp->Play();
 }
 
 void UDoorOpenComponent::CloseDoor(float DeltaTime)
@@ -49,12 +45,6 @@ void UDoorOpenComponent::CloseDoor(float DeltaTime)
 	CurrentRotation.Yaw = FMath::Lerp(CurrentRotation.Yaw, InitialYaw, DeltaTime * DoorCloseSpeed);
 
 	GetOwner()->SetActorRotation(CurrentRotation);
-
-	if (bDoorIsOpened)
-	{
-		AudioComp->Play();
-		bDoorIsOpened = false;
-	}
 }
 
 

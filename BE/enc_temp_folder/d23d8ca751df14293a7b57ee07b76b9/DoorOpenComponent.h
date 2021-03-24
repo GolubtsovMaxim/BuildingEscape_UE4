@@ -64,6 +64,4 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float DoorOpenSpeed = 1.f;
-
-	bool bDoorIsOpened = false;
 };
